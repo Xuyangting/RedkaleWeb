@@ -1,0 +1,273 @@
+[
+    {
+        "text": "测试用例",
+        "iconCls": "fa fa-th-large",
+        "state": "close",
+        "children": [
+            {
+                "moduleid": 301,
+                "text": "用例统计",
+                "iconCls": "fa fa-pencil fa-fw",
+                "url": "/modules/testlink/testcase.html"
+            }
+        ]
+    },
+    {
+        "text": "测试缺陷",
+        "iconCls": "fa fa-bug",
+        "state": "close",
+        "children": [
+            {
+                "moduleid": 401,
+                "text": "缺陷统计",
+                "iconCls": "fa fa-book fa-fw",
+                "url": "/modules/bug/bug.html"
+            },
+            {
+                "moduleid": 402,
+                "text": "缺陷原因",
+                "iconCls": "fa fa-glass",
+                "url": "/modules/bug/defectcause.html"
+            },
+            {
+                "moduleid": 403,
+                "text": "项目模块",
+                "iconCls": "fa fa-building",
+                "url": "/modules/bug/projectbug.html"
+            },
+            {
+                "moduleid": 404,
+                "text": "项目时间",
+                "iconCls": "fa fa-bolt",
+                "url": "/modules/bug/projecttime.html"
+            }
+        ]
+    },
+    {
+        "text": "在线监控",
+        "iconCls": "fa fa-bell",
+        "state": "close",
+        "children": [
+            {
+                "moduleid": 501,
+                "text": "告警统计",
+                "iconCls": "fa fa-bell-o",
+                "url": "/modules/monitor/alertrecord.html"
+            },
+            {
+                "moduleid": 507,
+                "text": "告警趋势",
+                "iconCls": "fa fa-paper-plane",
+                "url": "/modules/monitor/alertrecordtrend.html"
+            },
+            {
+                "moduleid": 502,
+                "text": "告警模块",
+                "iconCls": "fa fa-calendar",
+                "url": "/modules/monitor/module.html"
+            },
+            {
+                "moduleid": 503,
+                "text": "告警类型",
+                "iconCls": "fa fa-crop",
+                "url": "/modules/monitor/alerttype.html"
+            },
+            {
+                "moduleid": 504,
+                "text": "监控任务",
+                "iconCls": "fa fa-battery-full",
+                "url": "/modules/monitor/buildjob.html"
+            },
+            {
+                "moduleid": 505,
+                "text": "构建任务",
+                "iconCls": "fa fa-clock-o",
+                "url": "/modules/monitor/jenkinsbuild.html"
+            },
+            {
+                "moduleid": 506,
+                "text": "请求时间",
+                "iconCls": "fa fa-cloud-download",
+                "url": "/modules/monitor/requesttime.html"
+            },
+            {
+                "moduleid": 507,
+                "text": "行情持仓",
+                "iconCls": "fa fa-bookmark-o",
+                "url": "/modules/monitor/marketpostionprice.html"
+            }
+        ]
+    },
+    {
+        "text": "配置管理",
+        "iconCls": "fa fa-anchor",
+        "state": "close",
+        "children": [
+            {
+                "moduleid": 601,
+                "text": "调度管理",
+                "iconCls": "fa fa-binoculars",
+                "url": "/modules/scheduler/scheduler.html"
+            },
+            {
+                "moduleid": 603,
+                "text": "邮件管理",
+                "iconCls": "fa fa-simplybuilt",
+                "url": "/modules/scheduler/email.html"
+            },
+            {
+                "moduleid": 604,
+                "text": "微信管理",
+                "iconCls": "fa fa-weixin",
+                "url": "/modules/scheduler/wechat.html"
+            },
+            {
+                "moduleid": 605,
+                "text": "测试账号",
+                "iconCls": "fa fa-users",
+                "url": "/modules/scheduler/test_account.html"
+            }
+        ]
+    },
+    {
+        "text": "接口测试",
+        "iconCls": "fa fa-rebel",
+        "state": "close",
+        "children": [
+            {
+                "moduleid": 701,
+                "text": "环境管理",
+                "iconCls": "fa fa-linux",
+                "url": "/modules/interfaces/host.html"
+            },
+            {
+                "moduleid": 702,
+                "text": "模块管理",
+                "iconCls": "fa fa-reddit",
+                "url": "/modules/interfaces/modules.html"
+            },
+            {
+                "moduleid": 703,
+                "text": "接口管理",
+                "iconCls": "fa fa-reddit-square",
+                "url": "/modules/interfaces/api.html"
+            },
+            {
+                "moduleid": 704,
+                "text": "用例管理",
+                "iconCls": "fa fa-th-list",
+                "url": "/modules/interfaces/testcase.html"
+            },
+            {
+                "moduleid": 705,
+                "text": "集合管理",
+                "iconCls": "fa fa-th",
+                "url": "/modules/interfaces/testsuite.html"
+            },
+            {
+                "moduleid": 707,
+                "text": "任务管理",
+                "iconCls": "fa fa-pied-piper",
+                "url": "/modules/interfaces/testjob.html"
+            },
+            {
+                "moduleid": 708,
+                "text": "执行任务",
+                "iconCls": "fa fa-car",
+                "url": "/modules/interfaces/execute.html"
+            },
+            {
+                "moduleid": 709,
+                "text": "接口统计",
+                "iconCls": "fa fa-bar-chart",
+                "url": "/modules/interfaces/stats.html"
+            }
+        ]
+    },
+    {
+        "text": "应用测试",
+        "iconCls": "fa fa-paper-plane",
+        "state": "close",
+        "children": [
+            {
+                "moduleid": 801,
+                "text": "应用管理",
+                "iconCls": "fa fa-television",
+                "url": "/modules/app/application.html"
+            },
+            {
+                "moduleid": 808,
+                "text": "手机管理",
+                "iconCls": "fa fa-bus",
+                "url": "/modules/app/mobile.html"
+            },
+            {
+                "moduleid": 802,
+                "text": "模块管理",
+                "iconCls": "fa fa-plane",
+                "url": "/modules/app/application_module.html"
+            },
+            {
+                "moduleid": 803,
+                "text": "页面元素",
+                "iconCls": "fa fa-puzzle-piece",
+                "url": "/modules/app/elements.html"
+            },
+            {
+                "moduleid": 804,
+                "text": "用例管理",
+                "iconCls": "fa fa-street-view",
+                "url": "/modules/app/testcase.html"
+            },
+            {
+                "moduleid": 805,
+                "text": "集合管理",
+                "iconCls": "fa fa-suitcase",
+                "url": "/modules/app/testsuite.html"
+            },
+            {
+                "moduleid": 806,
+                "text": "任务管理",
+                "iconCls": "fa fa-calendar",
+                "url": "/modules/app/testjob.html"
+            },
+            {
+                "moduleid": 807,
+                "text": "执行任务",
+                "iconCls": "fa fa-gavel",
+                "url": "/modules/app/execute_testsuite.html"
+            },
+            {
+                "moduleid": 809,
+                "text": "测试方法",
+                "iconCls": "fa fa-crop",
+                "url": "/modules/app/test_method.html"
+            }
+        ]
+    },
+    {
+        "text": "对比测试",
+        "iconCls": "fa fa-arrows-alt",
+        "state": "close",
+        "children": [
+            {
+                "moduleid": 901,
+                "text": "股票管理",
+                "iconCls": "fa fa-sitemap",
+                "url": "/modules/compare/stock.html"
+            },
+            {
+                "moduleid": 902,
+                "text": "竞品对比",
+                "iconCls": "fa fa-simplybuilt",
+                "url": "/modules/compare/execute.html"
+            },
+            {
+                "moduleid": 903,
+                "text": "有鱼自测",
+                "iconCls": "fa fa-simplybuilt",
+                "url": "/modules/compare/execute_myself.html"
+            }
+        ]
+    }
+]

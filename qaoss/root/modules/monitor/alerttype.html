@@ -1,0 +1,177 @@
+<div class="page-title">
+    <a id="button-alerttype-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增类型</a>
+    <a id="button-alerttype-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改类型</a>
+</div>
+<div>
+    <div class="page-title">
+        <form class="filter-search" style="width: 400px;">
+            <input id="filter_alerttypename" type="text" placeholder="告警类型名称/告警类型描述" style="width: 350px;">
+            <i id="filter-alerttype-qrybtn" class="fa fa-search"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="alerttypetalbe" class="table table-hover table-striped" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>类型名称</th>
+                    <th>类型描述</th>
+                    <th>类型状态</th>
+                    <th>更新时间</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<div id="dialog-alerttype-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;"> 
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+        <h4 id="dtitle-alerttype-update" class="modal-title">修改类型</h4> 
+    </div>
+    <div class="modal-body"> 
+        <form id="form-alerttype-update" class="m-t form-horizontal"> 
+            <input  name="alerttypeid" type="hidden">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">类型名称</label>
+                <div class="col-lg-10"><input name="alerttypename" placeholder="类型名称" class="form-control" maxlength="30" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">类型描述</label>
+                <div class="col-lg-10"><input name="alerttypedesc" placeholder="类型描述" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">类型状态</label>
+                <div class="col-lg-10">
+                    <select id="form-alerttypestatus-update" name="status" class="form-control">
+                        <option value="10">正常</option>
+                        <option value="20">隐藏</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <button id="form-alerttype-updatebtn" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form> 
+    </div> 
+    <!--<div id="tips-alerttype-update" class="alerttype-alert-tips"></div><br>-->  
+</div>
+<script>
+    $(function () {
+        var alerttypeTable = $("#alerttypetalbe");
+
+        //加载所有的alerttype信息
+        alerttypeTable.dataTable({
+            paging: true,
+            info: true,
+            processing: true,
+            pageLength: 20,
+            destroy: true,
+            ajax: ({
+                url: '/pipes/alerttype/querysheet',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                data: function (f) {
+                    f.bean = JSON.stringify({
+                        alerttypename: $("#filter_alerttypename").val().trim(),
+                        alerttypedesc: $("#filter_alerttypename").val().trim()
+                    });
+                },
+                dataSrc: 'rows'
+            }),
+            columnDefs: [
+                {
+                    className: 'select-checkbox',
+                    targets: 0
+                }
+            ],
+            "columns": [
+                {data: ""},
+                {data: "alerttypeid"},
+                {data: "alerttypename"},
+                {data: "alerttypedesc"},
+                {data: "status",
+                    render: function (data, type, full, meta) {
+                        if (data)
+                            return data == 10 ? "正常" : "<font color='red'>隐藏</font>";
+                    }
+                },
+                {data: "updatetime",
+                    render: function (data, type, full, meta) {
+                        if (data)
+                            return new Date(data);
+                        else
+                            return "";
+                    }}
+            ]
+        });
+
+        $('#filter-alerttype-qrybtn').bind("click", function () {
+            alerttypeTable.api(true).draw();
+        });
+
+        //新增类型内容对话框
+        $('#button-alerttype-create').bind("click", function () {
+            $('#dtitle-alerttype-update').html("新增类型");
+//            $("#tips-alerttype-update").html('');
+
+            $("#form-alerttype-update").form('reset');
+            $('#dialog-alerttype-update').modal('show');
+        });
+
+        //初始化修改类型
+        $('#button-alerttype-update').bind("click", function () {
+            var data = alerttypeTable.api(true).row({selected: true}).data();
+            if (!data || !data.alerttypeid) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请先选择记录");
+                return;
+            }
+            $('#dtitle-alerttype-update').html("修改类型");
+//            $("#tips-alerttype-update").html('');
+            $("#form-alerttype-update").form('reset');
+            $("#form-alerttype-update").form('load', data);
+            $('#dialog-alerttype-update').modal('show');
+        });
+
+        //新增&修改用户按钮            
+        $('#form-alerttype-updatebtn').bind("click", function (e) {
+            var form = $("#form-alerttype-update");
+
+            var json = form.serializeJson();
+//            console.log(json);
+            if (json.alerttypename == null || json.alerttypename == "" || json.alerttypename.length > 30 || json.alerttypedesc == null || json.alerttypedesc == "" || json.alerttypedesc.length > 128) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请正确填写内容[非空且长度不能大于30]");
+                return;
+            }
+
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: json.alerttypeid ? '/pipes/alerttype/update' : '/pipes/alerttype/create',
+                data: {
+                    "bean": $.objectToString(json)
+                },
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data.retcode == 0) {
+                        $("#dialog-alerttype-update").modal('hide');
+                        alerttypeTable.api(true).draw(false);
+                    } else {
+                        toastr.options.positionClass = 'toast-top-center';
+                        toastr.options.timeOut = 2000;
+                        toastr.warning(data.retinfo);
+                    }
+                }
+            });
+        });
+    });
+
+</script>

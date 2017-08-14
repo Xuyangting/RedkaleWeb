@@ -1,0 +1,337 @@
+<div id="execute_test_job_body">
+    <div class="page-title">
+        <h5>质量中心 -> 执行任务</h5>
+        <a id="button-intervaljob-create" href="javascript:void(0);"><i class="fa fa-plus"></i>创建测试</a>
+    </div>
+    <div>
+        <div class="page-title">
+            <form class="filter-search" style="width: 400px;">
+                <input id="filter_intervalname" type="text" placeholder="请输入需要查询的测试任务名称" style="width: 350px;">
+                <i id="filter-intervaljob-qrybtn" class="fa fa-search"></i>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table id="intervaljobtable" class="table table-hover table-striped" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th hidden>ID</th>
+                        <th hidden>moduleID</th>
+                        <th>编号</th>
+                        <th>任务ID</th>
+                        <th>任务英文名</th>
+                        <th>测试结果</th>
+                        <th>测试报告</th>
+                        <th>创建者</th>
+                        <th>创建时间</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>  
+</div>
+
+<div id="test-report-for-test-job" style="overflow-y: scroll;height: 1000px;">
+    
+</div>
+
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/pipes/module/js/queryall2"></script>
+
+<div id="dialog-alerttype-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;"> 
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+        <h4 id="dtitle-alerttype-update" class="modal-title">修改</h4> 
+    </div>
+    <div class="modal-body"> 
+        <form id="form-alerttype-update" class="m-t form-horizontal"> 
+            <input class="select_id" name="id" type="hidden">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">平台列表</label>
+                <div class="col-lg-4">
+                    <select id="test_platform">
+                        <option value="all">全部</option>
+                        <option value="stock">有鱼股票</option>
+                        <option value="wealth">有鱼智投</option>
+                        <option value="esop">有鱼持股</option>
+                    </select>
+                </div>
+                <label class="col-lg-2 control-label">环境列表</label>
+                <div class="col-lg-4">
+                    <select id="test_case_env">
+                        <option value="all">全部</option>
+                        <option value="QA">QA</option>
+                        <option value="Stage">Stage</option>
+                        <option value="Live">Live</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">任务列表</label>
+                <div class="col-lg-10">
+                    <select name="job_id" id="job_id"></select>
+                </div>
+            </div>
+            <br>
+            <button id="form-alerttype-updatebtn" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form> 
+    </div> 
+</div>
+
+<script>
+    $(function () {
+        var intervaljobtable = $("#intervaljobtable");
+        
+        //加载所有
+        intervaljobtable.dataTable({
+            paging: true,
+            info: true,
+            processing: true,
+            pageLength: 20,
+            destroy: true,
+            ajax: ({
+                url: '/pipes/interface/execute/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                data: function (f) {
+                    f.bean = JSON.stringify({
+                        job_name: $("#filter_intervalname").val().trim(),
+                        job_chinese_name: $("#filter_intervalname").val().trim()
+                    });
+                },
+                dataSrc: 'rows'
+            }),
+            columnDefs: [
+                {
+                    className: 'select-checkbox',
+                    targets: 0
+                }
+            ],
+            "columns": [
+                {data: ""},
+                {data: "id"},
+                {data: "job_id"},
+                {data: "job_name"},
+                {data: "test_result",
+                    render: function(data, type, full, meta){
+                        if (data === undefined){
+                            return "正在测试";
+                        }else if(data.split("/")[0] === data.split("/")[1]){
+                            return "<p style=\"color: green\">" + data + "</p>";
+                        }else{
+                            return "<p style=\"color: red\">" + data + "</p>";
+                        }
+                    }
+                },
+                {data: "id",
+                    render: function (data, type, full, meta) {
+                            return "<a class=\"test-report\" href=\"javascript:void(0);\" id=\""+ data +"\">测试报告</a>";
+                        }
+                },
+                {data: "execute_by_author"},
+                {data: "execute_time",
+                    render: function (data, type, full, meta) {
+                        return new Date(data);
+                    }
+                }              
+            ]
+        });
+        
+        // 搜索
+        $('#filter-intervaljob-qrybtn').bind("click", function () {
+            intervaljobtable.api(true).draw();
+        });
+
+        // 创建测试 - 提示框
+        $('#button-intervaljob-create').bind("click", function () {
+            $("#job_id").empty();
+            $(".select_id").val("");
+            
+            $.ajax ({
+                url: '/pipes/interface/testjob/queryList',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    for(var i=0;i<list.length;i++){
+                        $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                    }
+                }
+            });
+            
+            $('#dtitle-alerttype-update').html("创建测试");
+            $("#form-alerttype-update").form('reset');
+            $('#dialog-alerttype-update').modal('show');
+        });
+        
+        // 分类任务类型
+        $("#test_platform").bind("click", function(){
+            var select_test_platform = $("#test_platform").val();
+            
+            $("#job_id").empty();
+            
+            $.ajax ({
+                url: '/pipes/interface/testjob/queryList',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    for(var i=0;i<list.length;i++){
+                        if(select_test_platform === "all" && list[i].name.indexOf("UC") < 0){
+                            $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                        }
+                        if(select_test_platform === "stock" && list[i].name.indexOf("Stock") > 0){
+                            $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                        }
+                        if(select_test_platform === "wealth" && list[i].name.indexOf("Wealth") > 0){
+                            $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                        }
+                        if(select_test_platform === "esop" && list[i].name.indexOf("ESOP") > 0){
+                            $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                        }
+                        if(list[i].name.indexOf("UC") > 0){
+                            $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                        }
+                    }
+                }
+            });
+        });
+        
+        // 分类任务类型
+        $("#test_case_env").bind("click", function(){
+            var select_test_platform = $("#test_platform").val();
+            var select_test_env = $("#test_case_env").val();
+            
+            $("#job_id").empty();
+            
+            $.ajax ({
+                url: '/pipes/interface/testjob/queryList',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    for(var i=0;i<list.length;i++){
+                        if(select_test_env === "all"){
+                            if(select_test_platform === "all" && list[i].name.indexOf("UC") < 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                            if(select_test_platform === "stock" && list[i].name.indexOf("Stock") > 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                            if(select_test_platform === "wealth" && list[i].name.indexOf("Wealth") > 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                            if(select_test_platform === "esop" && list[i].name.indexOf("ESOP") > 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                            if(list[i].name.indexOf("UC") > 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                        }else{
+                            if(select_test_platform === "all" && list[i].name.indexOf("UC") < 0 && list[i].name.indexOf(select_test_env) > 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                            if(select_test_platform === "stock" && list[i].name.indexOf("Stock") > 0 && list[i].name.indexOf(select_test_env) > 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                            if(select_test_platform === "wealth" && list[i].name.indexOf("Wealth") > 0 && list[i].name.indexOf(select_test_env) > 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                            if(select_test_platform === "esop" && list[i].name.indexOf("ESOP") > 0 && list[i].name.indexOf(select_test_env) > 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                            if(list[i].name.indexOf("UC") > 0 && list[i].name.indexOf(select_test_env) > 0){
+                                $("#job_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        
+        // 创建测试 - 提交       
+        $('#form-alerttype-updatebtn').bind("click", function (e) {
+            var form = $("#form-alerttype-update");
+            var json = form.serializeJson();
+            
+            if (json.env === "" || json.hostname === "" || json.host === "") {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("温馨提示：请填写完整 ^-^");
+                return;
+            }
+
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/interface/execute/create',
+                data: {
+                    "bean": $.objectToString(json)
+                },
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data.retcode === 0) {
+                        $("#dialog-alerttype-update").modal('hide');
+                        intervaljobtable.api(true).draw(false);
+                    } else {
+                        toastr.options.positionClass = 'toast-top-center';
+                        toastr.options.timeOut = 2000;
+                        toastr.warning(data.retinfo);
+                    }
+                }
+            });
+            
+        });
+        
+        // 点击查看测试报告
+        $(".test-report").bind("click", function(){
+           $("#execute_test_job_body").hide();
+           var report_id = $(this).attr("id");
+           
+           $.ajax({
+                url: '/pipes/interface/execute/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                data: function (f) {
+                    f.bean = JSON.stringify({
+                        id: report_id.trim()
+                    });
+                },
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    console.log(list);
+                    for(var i=0;i<list.length;i++){
+                        if(list[i].id == report_id){
+                            $("#test-report-for-test-job").append(list[i].test_report);
+                        }
+                    }
+                }
+            });  
+        });
+    });
+</script>

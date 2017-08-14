@@ -1,0 +1,614 @@
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/pipes/module/js/queryall2"></script>
+
+<div id="div_test_suite">
+    <h5>质量中心 -> 应用测试 -> 集合管理 【温馨提示】命名规则：YouYu_平台_模块_集合名称，如：YouYu_Stock_Market_HK_List 表示有鱼股票-市场-港股榜单</h5>
+    <div class="page-title" id="select_button">
+        <a id="button-intervaljob-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增</a>
+        <a id="button-intervaljob-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改</a>
+        <a id="view_test_case" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>查看用例</a>
+    </div>
+    <div>
+        <div class="page-title">
+            <form class="filter-search" style="width: 400px;">
+                <input id="filter_intervalname" type="text" placeholder="请输入需要查询的名称" style="width: 350px;">
+                <i id="filter-intervaljob-qrybtn" class="fa fa-search"></i>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table id="intervaljobtable" class="table table-hover table-striped" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th hidden>ID</th>
+                        <th hidden>moduleID</th>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>平台</th>
+                        <th>描述</th>
+                        <th>用例数</th>
+                        <th>更新时间</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div id="dialog-alerttype-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;"> 
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+        <h4 id="dtitle-alerttype-update" class="modal-title">修改</h4> 
+    </div>
+    <div class="modal-body"> 
+        <form id="form-alerttype-update" class="m-t form-horizontal"> 
+            <input class="select_id" name="id" type="hidden">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">名称</label>
+                <div class="col-lg-10"><input name="name" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">描述</label>
+                <div class="col-lg-10"><input name="description" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">平台</label>
+                <div class="col-lg-10">
+                    <select name="platform_id" id="platform_id"></select>
+                </div>
+            </div>
+            <br>
+            <button id="form-alerttype-updatebtn" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form> 
+    </div> 
+</div>
+</div>
+
+<div id="div_test_suite_case" style="display:none">
+    <div class="page-title">
+        <p>质量平台 -> 测试集合 -> 集合内用例</p>
+        <a id="back_to_test_case" href="javascript:void(0);"><i class="fa fa-backward"></i>返回</a>
+        <a id="button-intervaljob-create2" href="javascript:void(0);"><i class="fa fa-plus"></i>新增</a>
+<!--        <a id="button-intervaljob-update2" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改</a>-->
+        <a id="delete_test_case" href="javascript:void(0);"><i class="fa fa-times"></i>移除</a>
+        <a id="add_test_case_more" href="javascript:void(0);"><i class="fa fa-plus"></i>批量新增</a>
+    </div>
+    <div id="testsuite_case">
+        <div class="table-responsive">
+            <table id="intervaljobtable2" class="table table-hover table-striped" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th hidden>ID</th>
+                        <th hidden>moduleID</th>
+                        <th>编号</th>
+                        <th>集合编号</th>
+                        <th>用例编号</th>
+                        <th>用例名称</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div id="dialog-alerttype-update2" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;"> 
+        <div class="modal-header"> 
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+            <h4 id="dtitle-alerttype-update2" class="modal-title">修改</h4> 
+        </div>
+        <div class="modal-body"> 
+            <form id="form-alerttype-update2" class="m-t form-horizontal"> 
+                <input class="select_id" name="id" type="hidden">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">当前集合</label>
+                    <div class="col-lg-10">
+                        <select name="suite_id" id="suite_id"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">选择用例</label>
+                    <div class="col-lg-10">
+                        <select name="case_id" id="case_id"> </select>
+                    </div>
+                </div>
+                <br>
+                <button id="form-alerttype-updatebtn2" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+            </form> 
+        </div> 
+    </div>
+</div>
+
+<div id="view_select_add_test_case"  class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+        <h4 class="modal-title">请选择选择批量新增的用例</h4> 
+    </div>
+    <div class="modal-body"> 
+        <form class="filter-search" style="width: 400px;">
+            <input id="filter_intervalname3" type="text" placeholder="请输入测试用例的模块编号，如: 1001" style="width: 350px;">
+            <i id="filter-intervaljob-qrybtn3" class="fa fa-search"></i>
+        </form>
+        <div class="table-responsive">
+            <table id="select_test_case_table" class="table table-hover table-striped" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>选择</th>
+                        <th>用例编号</th>
+                        <th>用例名称</th>
+                    </tr>
+                </thead>
+            </table>
+            <button id="form-button-select-test-case" type="button" class="btn btn-theme btn-lg btn-block ">立即添加</button><br>
+        </div>
+    </div>
+</div>
+
+<script>
+     
+    $(function () {
+        var intervaljobtable = $("#intervaljobtable");
+        var intervaljobtable2 = $("#intervaljobtable2");
+        var test_suite_select = "";
+        var select_test_case_table = $("#select_test_case_table");
+        var test_platform_id = "";
+        
+        // 点击返回按钮， 从测试步骤返回到测试用例
+        $("#back_to_test_case").bind("click", function(){
+            $("#div_test_suite_case").hide();
+            $("#div_test_suite").show();
+        });
+        
+        // 加载测试集合
+        intervaljobtable.dataTable({
+            paging: true,
+            info: true,
+            processing: true,
+            pageLength: 20,
+            destroy: true,
+            ajax: ({
+                url: '/pipes/app/testsuite/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                data: function (f) {
+                    f.bean = JSON.stringify({
+                        name: $("#filter_intervalname").val().trim()
+                    });
+                },
+                dataSrc: 'rows'
+            }),
+            columnDefs: [
+                {
+                    className: 'select-checkbox',
+                    targets: 0
+                }
+            ],
+            "columns": [
+                {data: ""},
+                {data: "id"},
+                {data: "name"},
+                {data: "platform_name"},
+                {data: "description"},
+                {data: "case_num"},
+                {data: "ctime",
+                        render: function (data, type, full, meta) {
+                            return new Date(data);
+                        }}
+            ]            
+        });
+        
+        // 搜索测试集合
+        $('#filter-intervaljob-qrybtn').bind("click", function () {
+            intervaljobtable.api(true).draw();
+        });
+        
+        // 新增测试集合
+        $('#button-intervaljob-create').bind("click", function () {
+            $(".select_id").val("");
+            $("#platform_id").empty();
+            
+            $.ajax ({
+                url: '/pipes/app/application/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    console.log(list);
+                    for(var i=0;i<list.length;i++){
+                        $("#platform_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                    }
+                }
+            });
+            
+            $('#dtitle-alerttype-update').html("新增");
+            $("#form-alerttype-update").form('reset');
+            $('#dialog-alerttype-update').modal('show');
+        });
+        
+        // 查看测试用例
+        $('#view_test_case').bind("click", function () {
+            var data = intervaljobtable.api(true).row({selected: true}).data();
+            
+            if (!data) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请先选择记录");
+                return;
+            }
+            
+            $("#div_test_suite").hide();
+            $("#div_test_suite_case").show();  
+            
+            var select_id = data["id"];
+            test_platform_id = data["platform_id"];
+            test_suite_select = select_id;
+            
+            //加载所有 div 2
+            intervaljobtable2.dataTable({
+                paging: true,
+                info: true,
+                processing: true,
+                pageLength: 20,
+                destroy: true,
+                ajax: ({
+                    url: '/pipes/app/testsuitecase/queryall',
+                    async: false,
+                    cache: false,
+                    method: 'post',
+                    dataType: 'json',
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            suite_id: select_id
+                        });
+                    },
+                    dataSrc: 'rows'
+                }),
+                columnDefs: [
+                    {
+                        className: 'select-checkbox',
+                        targets: 0
+                    }
+                ],
+                "columns": [
+                    {data: ""},
+                    {data: "id"},
+                    {data: "suite_id"},
+                    {data: "case_id"},
+                    {data: "case_name"}
+                ]
+            });
+        });
+        
+        // 初始化修改测试集合类型
+        $('#button-intervaljob-update').bind("click", function () {
+            var data = intervaljobtable.api(true).row({selected: true}).data();
+            
+            if (!data) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请先选择记录");
+                return;
+            }
+            $("#platform_id").empty();
+            
+            $.ajax ({
+                url: '/pipes/app/application/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    console.log(list);
+                    for(var i=0;i<list.length;i++){
+                        $("#platform_id").append("<option value=\'" + list[i].id + "\'>" + list[i].name + "</option>");
+                    }
+                }
+            });
+            
+            $('#dtitle-alerttype-update').html("修改");
+            $("#form-alerttype-update").form('reset');
+            $("#form-alerttype-update").form('load', data);
+            $('#dialog-alerttype-update').modal('show');
+        });
+
+        //新增&修改 测试集合           
+        $('#form-alerttype-updatebtn').bind("click", function (e) {
+            var form = $("#form-alerttype-update");
+            var json = form.serializeJson();
+            
+            if (json.env === "" || json.hostname === "" || json.host === "") {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("温馨提示：请填写完整 ^-^");
+                return;
+            }
+
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: json.id ? '/pipes/app/testsuite/update' : '/pipes/app/testsuite/create',
+                data: {
+                    "bean": $.objectToString(json)
+                },
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data.retcode === 0) {
+                        $("#dialog-alerttype-update").modal('hide');
+                        intervaljobtable.api(true).draw(false);
+                    } else {
+                        toastr.options.positionClass = 'toast-top-center';
+                        toastr.options.timeOut = 2000;
+                        toastr.warning(data.retinfo);
+                    }
+                }
+            });
+        });
+
+        //新增 测试用例
+        $('#button-intervaljob-create2').bind("click", function () {
+            $("#suite_id").empty();
+            $("#case_id").empty();
+            $(".select_id").val("");
+            
+            
+            $.ajax ({
+                url: '/pipes/app/testsuite/queryList',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    for(var i=0;i<list.length;i++){
+                        if(list[i].id === test_suite_select){
+                            $("#suite_id").append("<option value=\'" + list[i].id + "\'>ID:" + list[i].id + "/Name:" + list[i].name + "</option>");
+                        }
+                    }
+                }
+            }); 
+            
+            $.ajax ({
+                url: '/pipes/app/testcase/queryList',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    for(var i=0;i<list.length;i++){
+                        if(list[i].platform_id === test_platform_id){
+                            $("#case_id").append("<option value=\'" + list[i].id + "\'>ID:" + list[i].id + "/Name:" + list[i].ename + "</option>");
+                        }
+                    }
+                }
+            }); 
+            
+            $('#dtitle-alerttype-update2').html("新增");
+            $("#form-alerttype-update2").form('reset');
+            $('#dialog-alerttype-update2').modal('show');
+        });
+
+        //初始化修改 测试用例 类型
+        $('#button-intervaljob-update2').bind("click", function () {
+            var data = intervaljobtable2.api(true).row({selected: true}).data();
+            
+            if (!data) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请先选择记录");
+                return;
+            }
+            $("#suite_id").empty();
+            $("#case_id").empty();
+            
+            $.ajax ({
+                url: '/pipes/app/testsuite/queryList',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    for(var i=0;i<list.length;i++){
+                        if(list[i].id === test_suite_select){
+                            $("#suite_id").append("<option value=\'" + list[i].id + "\'>ID:" + list[i].id + "/Name:" + list[i].name + "</option>");
+                        }
+                    }
+                }
+            });  
+            $.ajax ({
+                url: '/pipes/app/testcase/queryList',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    var list = data.rows;
+                    for(var i=0;i<list.length;i++){
+                        $("#case_id").append("<option value=\'" + list[i].id + "\'>ID:" + list[i].id + "/Name:" + list[i].ename + "</option>");
+                    }
+                }
+            }); 
+            $('#dtitle-alerttype-update2').html("修改");
+            $("#form-alerttype-update2").form('reset');
+            $("#form-alerttype-update2").form('load', data);
+            $('#dialog-alerttype-update2').modal('show');
+        });
+        
+        //移除 测试用例
+        $('#delete_test_case').bind("click", function () {
+            var data = intervaljobtable2.api(true).row({selected: true}).data();
+            
+            if (!data) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请先选择记录");
+                return;
+            }
+            
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: "/pipes/app/testsuitecase/delete",
+                data: {
+                    "bean": $.objectToString(data)
+                },
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data.retcode === 0) {
+                        intervaljobtable2.api(true).draw(false);
+                    } else {
+                        toastr.options.positionClass = 'toast-top-center';
+                        toastr.options.timeOut = 2000;
+                        toastr.warning(data.retinfo);
+                    }
+                }
+            });  
+        });
+        
+        //新增&修改 测试用例          
+        $('#form-alerttype-updatebtn2').bind("click", function (e) {
+            var form = $("#form-alerttype-update2");
+            var json = form.serializeJson();
+
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: json.id ? '/pipes/app/testsuitecase/update' : '/pipes/app/testsuitecase/create',
+                data: {
+                    "bean": $.objectToString(json)
+                },
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data.retcode === 0) {
+                        $("#dialog-alerttype-update2").modal('hide');
+                        intervaljobtable2.api(true).draw(false);
+                    } else {
+                        toastr.options.positionClass = 'toast-top-center';
+                        toastr.options.timeOut = 2000;
+                        toastr.warning(data.retinfo);
+                    }
+                }
+            });
+        });
+        
+        //批量新增 测试用例
+        $("#add_test_case_more").bind("click", function(){
+            $("#filter_intervalname3").val("");
+            
+            select_test_case_table.dataTable({
+                paging: true,
+                info: true,
+                processing: true,
+                pageLength: 15,
+                destroy: true,
+                ajax: ({
+                    url: '/pipes/app/testcase/queryall',
+                    async: false,
+                    cache: false,
+                    method: 'post',
+                    dataType: 'json',
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            api: $("#filter_intervalname3").val().trim()
+                        });
+                    },
+                    dataSrc: 'rows'
+                }),
+                "columns": [
+                    {
+                        "sClass": "text-center",
+                        "data": "id",
+                        "render": function (data, type, full, meta) {
+                            return '<input type="checkbox"  class="checkchild"  value="' + data + '" />';
+                        },
+                        "bSortable": false
+                    },
+                    {data: "id"},
+                    {data: "ename"}
+                ]
+            });
+            $("#form-alerttype-update2").form('reset');
+            $("#view_select_add_test_case").modal('show');
+        });
+        
+        // 批量新增 测试用例 -》 筛选
+        $('#filter-intervaljob-qrybtn3').bind("click", function () {
+            select_test_case_table.api(true).draw();
+        });
+        
+        //批量新增 -》 点击立即添加按钮
+        $("#form-button-select-test-case").bind("click", function(){
+            var id = [];
+            $(".checkchild:checked").each(function(){
+                id.push($(this).val());
+            });
+            for(var i=0;i<id.length;i++){
+                var new_data = {
+                    "suite_id": test_suite_select,
+                    "case_id": id[i],
+                    "comment": "",
+                    "cache": "",
+                    "transferParams": "",
+                    "depend": 0,
+                    "ishttp": 0,
+                    "sleepTime": 0,
+                    "loopNum": 0,
+                    "disable": 0,
+                    "isStep": 0,
+                    "retry": 0
+                }; 
+                $.ajax({
+                    cache: false,
+                    dataType: "json",
+                    type: "POST",
+                    url: '/pipes/app/testsuitecase/create',
+                    data: {
+                        "bean": $.objectToString(new_data)
+                    },
+                    error: function () {
+                        alert('请求失败');
+                    },
+                    success: function (data) {
+                        if (data.retcode === 0) {
+                            $("#view_select_add_test_case").modal('hide');
+                            intervaljobtable2.api(true).draw(false);
+                        }else{
+                            toastr.options.positionClass = 'toast-top-center';
+                            toastr.options.timeOut = 2000;
+                            toastr.warning(data.retinfo);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

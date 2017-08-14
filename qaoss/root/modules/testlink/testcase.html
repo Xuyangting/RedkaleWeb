@@ -1,0 +1,28 @@
+<div class="container">
+    <div id="byproject" style="height:400px"></div>
+    <div><table id="byprojecttable" class="table"></table></div>
+    <div id="byuser" style="height:400px"></div>
+    <div><table id="byusertable" class="table"></table></div>
+</div>
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/pipes/testcase/js/querycasesbyproject"></script>
+<script type="text/javascript" src="/pipes/testcase/js/querycasesbyuser"></script>
+
+<script>
+    var caseusermap = window['caseusermap'] || [];
+    var caseprojectmap = window['caseprojectmap'] || [];
+    
+    var bpChart = echarts.init(document.getElementById('byproject'));
+    bpChart.setOption(getDefaultBarOption("按项目", caseprojectmap));
+    fillTable("byprojecttable", caseprojectmap, true);
+    
+    var buChart = echarts.init(document.getElementById('byuser'));
+    buChart.setOption(getDefaultBarOption("按创建者", caseusermap));
+    fillTable("byusertable", caseusermap, true);
+
+    window.onresize = function() {
+        buChart.resize();
+        bpChart.resize();
+    };
+    
+</script>

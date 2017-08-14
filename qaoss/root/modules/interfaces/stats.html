@@ -1,0 +1,297 @@
+<div>
+    <div id="stats_api_line" style="min-width:400px;height:400px"></div><br/>
+    <div id="stats_api" style="min-width:400px;height:400px"></div><br/>
+    <div id="stats_case_line" style="min-width:400px;height:400px"></div><br/>
+    <div id="stats_case" style="min-width:400px;height:400px"></div><br/>
+</div>
+
+<script>
+    function userDate(uData){
+            var myDate = new Date(uData);
+            var year = myDate.getFullYear();
+            var month = myDate.getMonth() + 1;
+            var day = myDate.getDate();
+            return year + '-' + month + '-' + day;
+    }
+
+    $(function () {
+        // ajax请求返回所有的stats_apis数据
+        var api_data_info;
+        var case_data_info;
+        var api_module_id = [];
+        $.ajax ({
+                url: '/pipes/interface/stats_api/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    api_data_info = data.rows;
+                }
+            });
+        $.ajax ({
+                url: '/pipes/interface/stats_case/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    case_data_info = data.rows;
+                }
+            });
+        $.ajax ({
+                url: '/pipes/interface/module/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    api_module_id_list = data.rows;
+                    for(var i=0; i<api_module_id_list.length;i++){
+                        api_module_id.push(api_module_id_list[i].name);
+                    }
+                }
+            });
+        // 对api x轴进行解析
+        var api_list_x = [];
+        var hash = {};
+        for(var i=0;i<api_data_info.length;i++){
+            if(!hash[api_data_info[i].time]){
+                hash[api_data_info[i].time] = true;
+                api_list_x.push(userDate(api_data_info[i].time));
+            }
+        }   
+        // 对case x轴进行解析
+        var case_list_x = [];
+        var hash2 = {};
+        for(var i=0;i<case_data_info.length;i++){
+            if(!hash2[case_data_info[i].time]){
+                hash2[case_data_info[i].time] = true;
+                case_list_x.push(userDate(case_data_info[i].time));
+            }
+        }  
+        // 对api数据进行处理 - 折线图
+        var api_result = [];
+        for(var i=0;i<api_module_id.length;i++){
+            var data_list = [];
+            for(var j=0; j<api_data_info.length;j++){
+                if(api_data_info[j].module === api_module_id[i]){
+                    data_list.push(api_data_info[j].complete_num);
+                }
+            }
+            var single = {
+                name:api_module_id[i],
+                data:data_list
+            };
+            api_result.push(single);
+        }
+        // 对api数据进行处理 - 地区图
+        var api_result_area = [];
+        for(var i=0;i<api_module_id.length;i++){
+            var data_list_area = [];
+            for(var j=0; j<api_data_info.length;j++){
+                if(api_data_info[j].module === api_module_id[i]){
+                    var cover = parseInt(api_data_info[j].coverage);
+                    data_list_area.push(cover);
+                }
+            }
+            var single = {
+                name:api_module_id[i],
+                data:data_list_area
+            };
+            api_result_area.push(single);
+        }
+        // 对case数据进行处理 - 折线图
+        var case_result = [];
+        for(var i=0;i<api_module_id.length;i++){
+            var data_list = [];
+            for(var j=0; j<case_data_info.length;j++){
+                if(case_data_info[j].module === api_module_id[i]){
+                    data_list.push(case_data_info[j].complete_num);
+                }
+            }
+            var single = {
+                name:api_module_id[i],
+                data:data_list
+            };
+            case_result.push(single);
+        }
+        // 对case数据进行处理 - 地区图
+        var case_result_area = [];
+        for(var i=0;i<api_module_id.length;i++){
+            var data_list_area = [];
+            for(var j=0; j<case_data_info.length;j++){
+                if(case_data_info[j].module === api_module_id[i]){
+                    var cover = parseInt(case_data_info[j].coverage);
+                    data_list_area.push(cover);
+                }
+            }
+            var single = {
+                name:api_module_id[i],
+                data:data_list_area
+            };
+            case_result_area.push(single);
+        }
+        // 接口完成情况 - 折线图
+        $('#stats_api_line').highcharts({
+            chart: {
+                type: 'area'
+            },
+            title: {
+                text: '接口完成数量 - 折线图'
+            },
+            xAxis: {
+                categories: api_list_x,
+                tickmarkPlacement: 'on',
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: '数量（个）'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value;
+                    }
+                }
+            },
+            tooltip: {
+                split: true,
+                valueSuffix: ' 个'
+            },
+            plotOptions: {
+                area: {
+                    stacking: 'normal',
+                    lineColor: '#666666',
+                    lineWidth: 1,
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: '#666666'
+                    }
+                }
+            },
+            series: api_result
+        });
+        // 接口完成情况 - 柱形图
+        $('#stats_api').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '接口完成百分比 - 柱形图'
+            },
+            xAxis: {
+                categories: api_list_x,
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '百分比（%）'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: api_result_area
+        });
+        // 用例完成情况 - 折线图
+        $('#stats_case_line').highcharts({
+            chart: {
+                type: 'area'
+            },
+            title: {
+                text: '用例完成数量 - 折线图'
+            },
+            xAxis: {
+                categories: case_list_x,
+                tickmarkPlacement: 'on',
+                title: {
+                    enabled: false
+                }
+            },
+            yAxis: {
+                title: {
+                    text: '数量（个）'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value;
+                    }
+                }
+            },
+            tooltip: {
+                split: true,
+                valueSuffix: ' 个'
+            },
+            plotOptions: {
+                area: {
+                    stacking: 'normal',
+                    lineColor: '#666666',
+                    lineWidth: 1,
+                    marker: {
+                        lineWidth: 1,
+                        lineColor: '#666666'
+                    }
+                }
+            },
+            series: case_result
+        });
+        // 用例完成情况 - 柱形图
+        $('#stats_case').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '用例完成百分比 - 柱形图'
+            },
+            xAxis: {
+                categories: case_list_x,
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '百分比（%）'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: case_result_area
+        });
+    });
+</script>

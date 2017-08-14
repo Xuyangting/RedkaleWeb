@@ -1,0 +1,23 @@
+[
+    {
+        "text": "权限管理",
+        "iconCls": "fa-cog",
+        "state": "open",
+        "children": [
+            {
+                "moduleid": 101,
+                "text": "账号管理",
+                "iconCls": "fa-child",
+                "url": "/sysmodules/member.html",
+                "state": "open"
+            },
+            {
+                "moduleid": 103,
+                "text": "角色管理",
+                "iconCls": "fa-street-view",
+                "url": "/sysmodules/role.html",
+                "state": "open"
+            }
+        ]
+    }
+]

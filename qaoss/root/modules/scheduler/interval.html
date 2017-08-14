@@ -1,0 +1,214 @@
+<div class="page-title">
+    <a id="button-intervaljob-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增调度任务</a>
+    <a id="button-intervaljob-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改调度任务</a>
+</div>
+<div>
+    <div class="page-title">
+        <form class="filter-search" style="width: 400px;">
+            <input id="filter_intervalname" type="text" placeholder="名称" style="width: 350px;">
+            <i id="filter-intervaljob-qrybtn" class="fa fa-search"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="intervaljobtable" class="table table-hover table-striped" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th hidden>ID</th>
+                    <th hidden>moduleID</th>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>Weeks</th>
+                    <th>days</th>
+                    <th>hours</th>
+                    <th>minutes</th>
+                    <th>seconds</th>
+                    <th>start_date</th>
+                    <th>end_date</th>
+                    <th>timezone</th>
+                    <th>enable</th>
+                    <th>description</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/pipes/module/js/queryall2"></script>
+
+<div id="dialog-alerttype-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;"> 
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+        <h4 id="dtitle-alerttype-update" class="modal-title">修改调度任务</h4> 
+    </div>
+    <div class="modal-body"> 
+        <form id="form-alerttype-update" class="m-t form-horizontal"> 
+<!--            <div class="form-group">
+                <label class="col-lg-2 control-label">job_id</label>
+                <div class="col-lg-10"><input name="id" class="form-control" maxlength="30" required><div class="help-block with-errors"></div></div>
+            </div>-->
+            <input  name="id" type="hidden">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">job_name</label>
+                <div class="col-lg-10"><input name="job_name" class="form-control" maxlength="30" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">weeks</label>
+                <div class="col-lg-10"><input name="weeks" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">days</label>
+                <div class="col-lg-10"><input name="days" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">hours</label>
+                <div class="col-lg-10"><input name="hours" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">minutes</label>
+                <div class="col-lg-10"><input name="minutes" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">seconds</label>
+                <div class="col-lg-10"><input name="seconds" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">start_date</label>
+                <div class="col-lg-10"><input name="start_date" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">end_date</label>
+                <div class="col-lg-10"><input name="end_date" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">timezone</label>
+                <div class="col-lg-10"><input name="timezone" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">enable</label>
+                <div class="col-lg-10"><input name="enable" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">description</label>
+                <div class="col-lg-10"><input name="description" class="form-control" maxlength="128" required><div class="help-block with-errors"></div></div>
+            </div>
+            <br>
+            <button id="form-alerttype-updatebtn" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form> 
+    </div> 
+</div>
+
+<script>
+    $(function () {
+        var intervaljobtable = $("#intervaljobtable");
+
+        //加载所有的alerttype信息
+        intervaljobtable.dataTable({
+            paging: true,
+            info: true,
+            processing: true,
+            pageLength: 20,
+            destroy: true,
+            ajax: ({
+                url: '/pipes/interval/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                data: function (f) {
+                    f.bean = JSON.stringify({
+                        alerttypename: $("#filter_intervalname").val().trim(),
+                        alerttypedesc: $("#filter_intervalname").val().trim()
+                    });
+                },
+                dataSrc: 'rows'
+            }),
+            columnDefs: [
+                {
+                    className: 'select-checkbox',
+                    targets: 0
+                }
+            ],
+            "columns": [
+                {data: ""},
+                {data: "id"},
+                {data: "job_name"},
+                {data: "weeks"},
+                {data: "days"},
+                {data: "hours"},
+                {data: "minutes"},
+                {data: "seconds"},
+                {data: "start_date"},
+                {data: "end_date"},
+                {data: "timezone"},
+                {data: "enable"},
+                {data: "description"}
+            ]
+        });
+
+        $('#filter-intervaljob-qrybtn').bind("click", function () {
+            intervaljobtable.api(true).draw();
+        });
+
+        //新增调度任务对话框
+        $('#button-intervaljob-create').bind("click", function () {
+            $('#dtitle-alerttype-update').html("新增调度任务");
+            $("#form-alerttype-update").form('reset');
+            $('#dialog-alerttype-update').modal('show');
+        });
+
+        //初始化修改类型
+        $('#button-intervaljob-update').bind("click", function () {
+            var data = intervaljobtable.api(true).row({selected: true}).data();
+            
+            if (!data) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请先选择记录");
+                return;
+            }
+            
+            $('#dtitle-alerttype-update').html("修改调度任务");
+            $("#form-alerttype-update").form('reset');
+            $("#form-alerttype-update").form('load', data);
+            $('#dialog-alerttype-update').modal('show');
+        });
+
+        //新增&修改用户按钮            
+        $('#form-alerttype-updatebtn').bind("click", function (e) {
+            var form = $("#form-alerttype-update");
+            var json = form.serializeJson();
+            
+            if (json.job_name === "" || json.enable === "" || (json.enable !== "YES" && json.enable !== "NO")) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("温馨提示：job_name不能为空 enable只能填写YES/NO ^-^");
+                return;
+            }
+
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: json.id ? '/pipes/interval/update' : '/pipes/interval/create',
+                data: {
+                    "bean": $.objectToString(json)
+                },
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data.retcode === 0) {
+                        $("#dialog-alerttype-update").modal('hide');
+                        intervaljobtable.api(true).draw(false);
+                    } else {
+                        toastr.options.positionClass = 'toast-top-center';
+                        toastr.options.timeOut = 2000;
+                        toastr.warning(data.retinfo);
+                    }
+                }
+            });
+        });
+    });
+</script>

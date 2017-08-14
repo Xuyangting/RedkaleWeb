@@ -1,0 +1,61 @@
+<div>
+    <div class="page-title">
+        <table class="table-condensed">
+            <tr>
+                <td>告警开始时间</td>
+                <td><input type="text" id="starttime"></td>
+                <td>告警结束时间</td>
+                <td><input type="text" id="endtime"></td>
+                <td>环境: </td>
+                <td>
+                    <select class="select select-item">
+                        <option value="L">Live</option>
+                        <option value="S">Stage</option>
+                        <option value="Q">QA</option>
+                    </select>
+                </td>
+                <td><i id="filter-alertrecord-qrybtn" class="fa fa-search"></i></td>
+            </tr>
+        </table>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <td><table id="moduletable" class="table table-responsive"></table></td>
+                <td><table id="alerttypetable" class="table table-responsive"></table></td>
+            </tr>
+            <tr>
+                <td style="width: 50%;"><div id="modulechart" style="height: 400px"></div></td>
+                <td style="width: 50%;"><div id="alerttypechart" style="height: 400px"></div></td>
+            </tr>
+        </table>
+    </div>
+    <div class="table-responsive">
+        <table id="alertrecordtable" class="table table-hover table-bordered" hidden>
+            <thead>
+                <tr>
+                    <th>模块名称</th>
+                    <th>告警时间</th>
+                    <th>告警类型</th>
+                    <th>告警描述</th>
+                    <th>告警级别</th>
+                    <th>告警环境</th>
+                    <th>用例名称</th>
+                    <th>期望结果</th>
+                    <th>实际结果</th>
+                    <th>请求ID</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div style="height: 100px"></div>
+</div>
+
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/pipes/module/js/queryall"></script>
+<script type="text/javascript" src="/pipes/alerttype/js/queryall"></script>
+<script type="text/javascript" src="/res/js/monitor/alertrecord.js"></script>
+<script>
+    $("#filter-alertrecord-qrybtn").click();
+</script>

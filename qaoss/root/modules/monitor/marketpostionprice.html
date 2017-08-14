@@ -1,0 +1,21 @@
+<div>
+    <div class="page-title">
+        Ticker: &nbsp; <select id="ticker">
+            <option value="hk00883">hk00883</option>
+            <option value="arJDST">arJDST</option>
+            <option value="sh600020">sh600020</option>
+        </select> &nbsp;
+        开始时间: &nbsp; <input type="text" id="mppstarttime"> &nbsp; 结束时间: &nbsp; <input type="text" id="mppendtime">&nbsp;&nbsp;
+        <i id="filter-mpp-qrybtn" class="fa fa-search"></i>
+    </div>
+    <div>
+        <div id="mppchart" style="height:400px"></div>
+    </div>
+    <div style="height:50px"></div>
+</div>
+
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/res/js/monitor/marketpostionprice.js"></script>
+<script>
+    $("#filter-mpp-qrybtn").click();
+</script>

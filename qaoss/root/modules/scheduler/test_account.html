@@ -1,0 +1,213 @@
+<div class="page-title">
+    <h5>质量中心 -> 配置管理 -> 测试账号 【温馨提示】请勿使用他人的测试账号，避免账号使用过程中出现冲突，导致执行自动化用例失败 ^_^</h5>
+    <a id="button-intervaljob-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增</a>
+    <a id="button-intervaljob-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改</a>
+</div>
+<div>
+    <div class="page-title">
+        <form class="filter-search" style="width: 400px;">
+            <input id="filter_intervalname" type="text" placeholder="请输入需要查询的名称" style="width: 350px;">
+            <i id="filter-intervaljob-qrybtn" class="fa fa-search"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="intervaljobtable" class="table table-hover table-striped" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th hidden>ID</th>
+                    <th hidden>moduleID</th>
+                    <th>编号</th>
+                    <th>QA账号</th>
+                    <th>QA登录密码</th>
+                    <th>QA交易密码</th>
+                    <th>Stage账号</th>
+                    <th>Stage登录密码</th>
+                    <th>Stage交易密码</th>
+                    <th>Live账号</th>
+                    <th>Live登录密码</th>
+                    <th>Live交易密码</th>
+                    <th>使用者</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/pipes/module/js/queryall2"></script>
+
+<div id="dialog-alerttype-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;"> 
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+        <h4 id="dtitle-alerttype-update" class="modal-title">修改</h4> 
+    </div>
+    <div class="modal-body"> 
+        <form id="form-alerttype-update" class="m-t form-horizontal"> 
+            <input class="select_id" name="id" type="hidden">
+            <div class="form-group">
+                <label class="col-lg-3 control-label">QA账号</label>
+                <div class="col-lg-9"><input name="qa_account" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">QA登录密码</label>
+                <div class="col-lg-9"><input name="qa_password" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">QA交易密码</label>
+                <div class="col-lg-9"><input name="qa_trade_password" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Stage账号</label>
+                <div class="col-lg-9"><input name="stage_account" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Stage登录密码</label>
+                <div class="col-lg-9"><input name="stage_password" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Stage交易密码</label>
+                <div class="col-lg-9"><input name="stage_trade_password" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Live账号</label>
+                <div class="col-lg-9"><input name="live_account" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Live登录密码</label>
+                <div class="col-lg-9"><input name="live_password" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">Live交易密码</label>
+                <div class="col-lg-9"><input name="live_trade_password" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">使用者</label>
+                <div class="col-lg-9"><input name="owner" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">备注</label>
+                <div class="col-lg-9">
+                    <textarea name="remark" style="width: 100%;height: 100px;" id="inputparameters"></textarea>
+                </div>
+            </div>
+            <br>
+            <button id="form-alerttype-updatebtn" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form> 
+    </div> 
+</div>
+
+<script>
+    $(function () {
+        var intervaljobtable = $("#intervaljobtable");
+
+        //加载所有
+        intervaljobtable.dataTable({
+            paging: true,
+            info: true,
+            processing: true,
+            pageLength: 20,
+            destroy: true,
+            ajax: ({
+                url: '/pipes/test_account/queryall',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                data: function (f) {
+                    f.bean = JSON.stringify({
+                        name: $("#filter_intervalname").val().trim()
+                    });
+                },
+                dataSrc: 'rows'
+            }),
+            columnDefs: [
+                {
+                    className: 'select-checkbox',
+                    targets: 0
+                }
+            ],
+            "columns": [
+                {data: ""},
+                {data: "id"},
+                {data: "qa_account"},
+                {data: "qa_password"},
+                {data: "qa_trade_password"},
+                {data: "stage_account"},
+                {data: "stage_password"},
+                {data: "stage_trade_password"},
+                {data: "live_account"},
+                {data: "live_password"},
+                {data: "live_trade_password"},
+                {data: "owner"},
+                {data: "remark"}
+            ]
+        });
+
+        $('#filter-intervaljob-qrybtn').bind("click", function () {
+            intervaljobtable.api(true).draw();
+        });
+
+        //新增
+        $('#button-intervaljob-create').bind("click", function () {
+            $(".select_id").val("");
+            $('#dtitle-alerttype-update').html("新增");
+            $("#form-alerttype-update").form('reset');
+            $('#dialog-alerttype-update').modal('show');
+        });
+
+        //初始化修改
+        $('#button-intervaljob-update').bind("click", function () {
+            var data = intervaljobtable.api(true).row({selected: true}).data();
+            
+            if (!data) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请先选择记录");
+                return;
+            }
+            
+            $('#dtitle-alerttype-update').html("修改");
+            $("#form-alerttype-update").form('reset');
+            $("#form-alerttype-update").form('load', data);
+            $('#dialog-alerttype-update').modal('show');
+        });
+
+        //新增&修改           
+        $('#form-alerttype-updatebtn').bind("click", function (e) {
+            var form = $("#form-alerttype-update");
+            var json = form.serializeJson();
+            
+            if (json.name === "") {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("温馨提示：请填写完整 ^-^");
+                return;
+            }
+
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: json.id ? '/pipes/test_account/update' : '/pipes/test_account/create',
+                data: {
+                    "bean": $.objectToString(json)
+                },
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data.retcode === 0) {
+                        $("#dialog-alerttype-update").modal('hide');
+                        intervaljobtable.api(true).draw(false);
+                    } else {
+                        toastr.options.positionClass = 'toast-top-center';
+                        toastr.options.timeOut = 2000;
+                        toastr.warning(data.retinfo);
+                    }
+                }
+            });
+        });
+    });
+</script>

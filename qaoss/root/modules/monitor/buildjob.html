@@ -1,0 +1,190 @@
+<div class="page-title">
+    <a id="button-buildjob-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增监控任务</a>
+    <a id="button-buildjob-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改监控任务</a>
+</div>
+<div>
+    <div class="page-title">
+        <form class="filter-search" style="width: 400px;">
+            <input id="filter_buildjobname" type="text" placeholder="任务名称" style="width: 350px;">
+            <i id="filter-buildjob-qrybtn" class="fa fa-search"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="buildjobtable" class="table table-hover table-striped" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th hidden>ID</th>
+                    <th hidden>moduleID</th>
+                    <th>模块名称</th>
+                    <th>任务名称</th>
+                    <th>任务URI</th>
+                    <th>最近构建</th>
+                    <th>任务状态</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<div id="dialog-buildjob-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;"> 
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+        <h4 id="dtitle-buildjob-update" class="modal-title">修改任务</h4> 
+    </div>
+    <div class="modal-body"> 
+        <form id="form-buildjob-update" class="m-t form-horizontal"> 
+            <input  name="buildjobid" type="hidden">
+            <input  name="lastbuildno" type="hidden">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">任务名称</label>
+                <div class="col-lg-10"><input name="name" placeholder="任务名称" class="form-control" maxlength="80" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">任务URI</label>
+                <div class="col-lg-10"><input name="buildjoburl" placeholder="任务URI" class="form-control" maxlength="300" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">任务状态</label>
+                <div class="col-lg-10">
+                    <select id="form-buildjobstatus-update" name="status" class="form-control">
+                        <option value="10">正常</option>
+                        <option value="20">隐藏</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">模块名称</label>
+                <div  class="col-lg-10"><select id="buildjobmoduleid" name="moduleid" class="form-control"></select></div>
+            </div>
+            <br>
+            <button id="form-buildjob-updatebtn" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form> 
+    </div> 
+</div>
+
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/pipes/module/js/queryall2"></script>
+
+<script>
+    $(function () {
+        var moduleMap = window['modulemap2'] || [];
+
+        var buildjobTable = $("#buildjobtable");
+        $("#buildjobmoduleid").combobox(moduleMap);
+
+        //加载所有的buildjob信息
+        buildjobTable.dataTable({
+            paging: true,
+            info: true,
+            processing: true,
+            pageLength: 20,
+            destroy: true,
+            ajax: ({
+                url: '/pipes/buildjob/querysheet',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                data: function (f) {
+                    f.bean = JSON.stringify({
+                        name: $("#filter_buildjobname").val().trim()
+                    });
+                },
+                dataSrc: 'rows'
+            }),
+            columnDefs: [
+                {
+                    className: 'select-checkbox',
+                    targets: 0
+                }
+            ],
+            "columns": [
+                {data: ""},
+                {data: "buildjobid", visible: false},
+                {data: "moduleid", visible: false},
+                {data: "modulename"},
+                {data: "name"},
+                {data: "buildjoburl"},
+                {data: "lastbuildno"},
+                {data: "status",
+                    render: function (data, type, full, meta) {
+                        if (data)
+                            return data == 10 ? "正常" : "<font color='red'>隐藏</font>";
+                    }
+                }
+            ]
+        });
+
+        $('#filter-buildjob-qrybtn').bind("click", function () {
+            buildjobTable.api(true).draw();
+        });
+
+        //新增模块内容对话框
+        $('#button-buildjob-create').bind("click", function () {
+            $('#dtitle-buildjob-update').html("新增任务");
+//            $("#tips-buildjob-update").html('');
+
+            $("#form-buildjob-update").form('reset');
+            $('#dialog-buildjob-update').modal('show');
+
+        });
+
+        //初始化修改模块
+        $('#button-buildjob-update').bind("click", function () {
+            var data = buildjobTable.api(true).row({selected: true}).data();
+            if (!data || !data.buildjobid) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请先选择记录");
+                return;
+            }
+            $('#dtitle-buildjob-update').html("修改任务");
+//            $("#tips-buildjob-update").html('');
+            $("#form-buildjob-update").form('reset');
+            $("#form-buildjob-update").form('load', data);
+            $('#dialog-buildjob-update').modal('show');
+        });
+
+        //新增&修改按钮            
+        $('#form-buildjob-updatebtn').bind("click", function (e) {
+            $("#form-buildjob-updatebtn").attr("disabled", true);
+            var form = $("#form-buildjob-update");
+
+            var json = form.serializeJson();
+//            console.log(json);
+            if (json.name == null || json.name == "" || json.name.length > 80 || json.buildjoburl == null || json.buildjoburl == "" || json.buildjoburl.length > 300) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请正确填写内容[非空且长度不能大于30]");
+                $("#form-buildjob-updatebtn").removeAttr("disabled");
+                return;
+            }
+
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: json.buildjobid ? '/pipes/buildjob/update' : '/pipes/buildjob/create',
+                data: {
+                    "bean": $.objectToString(json)
+                },
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data.retcode == 0) {
+                        $("#dialog-buildjob-update").modal('hide');
+                        buildjobTable.api(true).draw(false);
+                    } else {
+                        toastr.options.positionClass = 'toast-top-center';
+                        toastr.options.timeOut = 2000;
+                        toastr.warning(data.retinfo);
+                    }
+                }
+            });
+
+            $("#form-buildjob-updatebtn").removeAttr("disabled");
+        });
+    });
+
+</script>

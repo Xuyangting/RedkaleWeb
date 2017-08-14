@@ -1,0 +1,27 @@
+<div>
+    <div class="page-title">
+        <table>
+            <tr>
+                <td>
+                    <label>项目名称：</label>
+                    <select class="combobox"></select>
+                </td>
+                <td>&nbsp;&nbsp;</td>
+                <td>
+                    <i id="filter-projectbug-qrybtn" class="fa fa-search"></i>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="bymodelforproject" style="height:400px"></div>
+    <div id="bymodelforprojectpiechart" style="height:400px"></div>
+    <div class="table-responsive"><table id="bymodelforprojecttable" class="table table-condensed"></table></div>
+    <div style="height:100px"></div>
+</div>
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/pipes/project/js/queryprojects"></script>
+<script type="text/javascript" src="/res/js/bug/projectbug.js"></script>
+
+<script>
+    $("#filter-projectbug-qrybtn").click();
+</script>

@@ -1,0 +1,158 @@
+<div class="page-title">
+    <h5>质量中心 -> 应用测试 -> 测试方法 【温馨提示】测试方法不可随意更改，如需更改请发邮件到自动化组（qa-auto@yff.com）</h5>
+<!--    <a id="button-intervaljob-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增</a>
+    <a id="button-intervaljob-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改</a>-->
+</div>
+<div>
+    <div class="page-title">
+        <form class="filter-search" style="width: 400px;">
+            <input id="filter_intervalname" type="text" placeholder="请输入需要查询的名称" style="width: 350px;">
+            <i id="filter-intervaljob-qrybtn" class="fa fa-search"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="intervaljobtable" class="table table-hover table-striped" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th hidden>ID</th>
+                    <th hidden>moduleID</th>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>描述</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript" src="/res/js/platf.js"></script>
+<script type="text/javascript" src="/pipes/module/js/queryall2"></script>
+
+<div id="dialog-alerttype-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;"> 
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+        <h4 id="dtitle-alerttype-update" class="modal-title">修改</h4> 
+    </div>
+    <div class="modal-body"> 
+        <form id="form-alerttype-update" class="m-t form-horizontal"> 
+            <input class="select_id" name="id" type="hidden"> 
+            <div class="form-group">
+                <label class="col-lg-2 control-label">名称</label>
+                <div class="col-lg-10"><input name="name" class="form-control" required><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">描述</label>
+                <div class="col-lg-10">
+                    <textarea name="description" style="width: 100%;height: 200px;" id="description"></textarea>
+                </div>
+            </div>
+            <button id="form-alerttype-updatebtn" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form> 
+    </div> 
+</div>
+
+<script>
+    $(function () {
+        var intervaljobtable = $("#intervaljobtable");
+
+        //加载所有的alerttype信息
+        intervaljobtable.dataTable({
+            paging: true,
+            info: true,
+            processing: true,
+            pageLength: 20,
+            destroy: true,
+            ajax: ({
+                url: '/pipes/app/testMethod/queryList',
+                async: false,
+                cache: false,
+                method: 'post',
+                dataType: 'json',
+                data: function (f) {
+                    f.bean = JSON.stringify({
+                        name: $("#filter_intervalname").val().trim()
+                    });
+                },
+                dataSrc: 'rows'
+            }),
+            columnDefs: [
+                {
+                    className: 'select-checkbox',
+                    targets: 0
+                }
+            ],
+            "columns": [
+                {data: ""},
+                {data: "id"},
+                {data: "name"},
+                {data: "description"}
+            ]
+        });
+
+        $('#filter-intervaljob-qrybtn').bind("click", function () {
+            intervaljobtable.api(true).draw();
+        });
+
+        //新增调度任务对话框
+        $('#button-intervaljob-create').bind("click", function () {
+            $(".select_id").val("");
+            $('#dtitle-alerttype-update').html("新增");
+            $("#form-alerttype-update").form('reset');
+            $('#dialog-alerttype-update').modal('show');
+        });
+
+        //初始化修改类型
+        $('#button-intervaljob-update').bind("click", function () {
+            var data = intervaljobtable.api(true).row({selected: true}).data();
+            
+            if (!data) {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("请先选择记录");
+                return;
+            }
+            
+            $('#dtitle-alerttype-update').html("修改");
+            $("#form-alerttype-update").form('reset');
+            $("#form-alerttype-update").form('load', data);
+            $('#dialog-alerttype-update').modal('show');
+        });
+
+        //新增&修改用户按钮            
+        $('#form-alerttype-updatebtn').bind("click", function (e) {
+            var form = $("#form-alerttype-update");
+            var json = form.serializeJson();
+            
+            if (json.name === "") {
+                toastr.options.positionClass = 'toast-top-center';
+                toastr.options.timeOut = 2000;
+                toastr.warning("温馨提示：请填写完整 ^-^");
+                return;
+            }
+
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: json.id ? '/pipes/app/testMethod/update' : '/pipes/app/testMethod/create',
+                data: {
+                    "bean": $.objectToString(json)
+                },
+                error: function () {
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data.retcode === 0) {
+                        $("#dialog-alerttype-update").modal('hide');
+                        intervaljobtable.api(true).draw(false);
+                    } else {
+                        toastr.options.positionClass = 'toast-top-center';
+                        toastr.options.timeOut = 2000;
+                        toastr.warning(data.retinfo);
+                    }
+                }
+            });
+        });
+    });
+</script>

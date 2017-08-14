@@ -1,0 +1,10 @@
+<div><select id="buildjobmoduleid" name="moduleid" class="combobox"></select></div>
+
+<script type="text/javascript" src="/pipes/module/js/queryall2"></script>
+<script type="text/javascript" src="/res/js/platf.js"></script>
+
+<script type="text/javascript">
+    var moduleMap = window['modulemap2'] || [];
+    console.log(moduleMap);
+    $(".combobox").combobox(moduleMap);
+</script>
